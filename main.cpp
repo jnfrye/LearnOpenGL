@@ -124,7 +124,7 @@ bool TryCompileAndLinkShaders(unsigned int& shaderProgram)
 	std::cout << "VERT SHADER ID: " << vertexShader << std::endl;
 
 	unsigned int fragmentShader;
-	if (!TryCompileShader(GL_FRAGMENT_SHADER, fragmentShader, "#version 330 core\nout vec4 FragColor;\nvoid main() { FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f); }"))
+	if (!TryCompileShader(GL_FRAGMENT_SHADER, fragmentShader, "#version 330 core\nout vec4 FragColor;\nvoid main() { FragColor = vec4(1.0f, 0.f, 0.f, 1.0f); }"))
 	{
 		return false;
 	}
@@ -145,17 +145,22 @@ bool TryCompileAndLinkShaders(unsigned int& shaderProgram)
 	return true;
 }
 
-void BufferVertexData(unsigned int vertexArraySize, GLfloat vertexArray[], unsigned int& vao, unsigned int& vbo)
+void BufferVertexData(unsigned int vertexArraySize, GLfloat vertexArray[], unsigned int elementArraySize, unsigned int elementArray[], unsigned int& vao, unsigned int& vbo, unsigned int& ebo)
 {
 	// Bind the VAO to store everything in
 	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
 
 	glBindVertexArray(vao);
 
-	// Set up the buffer
+	// Set up the vertex buffer
+	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // Bind the buffer as the VBO buffer
 	glBufferData(GL_ARRAY_BUFFER, vertexArraySize, vertexArray, GL_STATIC_DRAW); // Stuff the vertex data into the buffer
+
+	// Set up the element buffer
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementArraySize, elementArray, GL_STATIC_DRAW);
 
 	// Tell OpenGL how our attribute is laid out in the array
 	unsigned int location = 0;
@@ -201,9 +206,14 @@ int main()
 		0.0f, 0.5f, 0.0f
 	};
 
+	unsigned int elementIndices[] = {
+		0, 1, 2
+	};
+
 	unsigned int vao;
 	unsigned int vbo;
-	BufferVertexData(sizeof(myTriangle), myTriangle, vao, vbo);
+	unsigned int ebo;
+	BufferVertexData(sizeof(myTriangle), myTriangle, sizeof(elementIndices), elementIndices, vao, vbo, ebo);
 
 	while (window && !glfwWindowShouldClose(window))
 	{
@@ -211,12 +221,13 @@ int main()
 
 		// ---------- rendering START!
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, sizeof(elementIndices), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		// ---------- rendering END!
 
@@ -226,6 +237,7 @@ int main()
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ebo);
 	glDeleteProgram(shaderProgram);
 	glfwTerminate();
 
