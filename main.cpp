@@ -202,12 +202,14 @@ int main()
 	// With a z-coord of 0, the depth is the same for each
 	GLfloat myTriangle[] = {
 		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
+		 0.0f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f,
+		 0.5f,  0.5f, 0.0f,
 	};
 
 	unsigned int elementIndices[] = {
-		0, 1, 2
+		1, 2, 3,
+		0, 2, 1
 	};
 
 	unsigned int vao;
