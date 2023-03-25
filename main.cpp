@@ -25,7 +25,7 @@ int main()
 	if (!TryCompileAndLinkShaders(shaderProgram))
 		return -1;
 
-	GLfloat vertices[] =
+	GLfloat parallelogramVerts[] =
 	{
 		-0.5f, -0.5f, 0.0f,
 		 0.0f, -0.5f, 0.0f,
@@ -33,14 +33,29 @@ int main()
 		 0.5f,  0.5f, 0.0f,
 	};
 
-	unsigned int elements[] =
+	unsigned int parallelogramElems[] =
 	{
 		1, 2, 3,
 		0, 2, 1
 	};
 
-	Mesh myMesh{ sizeof(vertices), vertices, sizeof(elements), elements };
-	myMesh.Initialize();
+	Mesh parallelogramMesh{ sizeof(parallelogramVerts), parallelogramVerts, sizeof(parallelogramElems), parallelogramElems };
+	parallelogramMesh.Initialize();
+
+	GLfloat triangleVerts[] =
+	{
+		-1.0f,  1.0f, 0.0f,
+		-0.8f,  0.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f,
+	};
+
+	unsigned int triangleElems[] =
+	{
+		0, 1, 2
+	};
+
+	Mesh triangleMesh{ sizeof(triangleVerts), triangleVerts, sizeof(triangleElems), triangleElems };
+	triangleMesh.Initialize();
 
 	while (window && !glfwWindowShouldClose(window))
 	{
@@ -52,7 +67,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
-		myMesh.Draw();
+		parallelogramMesh.Draw();
+		triangleMesh.Draw();
 
 		// ---------- rendering END
 
@@ -60,7 +76,8 @@ int main()
 		glfwPollEvents();
 	}
 
-	myMesh.CleanUp();
+	parallelogramMesh.CleanUp();
+	triangleMesh.CleanUp();
 	glDeleteProgram(shaderProgram);
 	glfwTerminate();
 
