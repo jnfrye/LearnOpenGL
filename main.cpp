@@ -25,7 +25,7 @@ int main()
 	if (!TryCompileAndLinkShaders(shaderProgram))
 		return -1;
 
-	GLfloat myTriangle[] =
+	GLfloat vertices[] =
 	{
 		-0.5f, -0.5f, 0.0f,
 		 0.0f, -0.5f, 0.0f,
@@ -33,40 +33,34 @@ int main()
 		 0.5f,  0.5f, 0.0f,
 	};
 
-	unsigned int elementIndices[] =
+	unsigned int elements[] =
 	{
 		1, 2, 3,
 		0, 2, 1
 	};
 
-	unsigned int vao;
-	unsigned int vbo;
-	unsigned int ebo;
-	BufferVertexData(sizeof(myTriangle), myTriangle, sizeof(elementIndices), elementIndices, vao, vbo, ebo);
+	Mesh myMesh{ sizeof(vertices), vertices, sizeof(elements), elements };
+	myMesh.Initialize();
 
 	while (window && !glfwWindowShouldClose(window))
 	{
 		ProcessInput(window);
 
-		// ---------- rendering START!
+		// ---------- rendering START
 
 		glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, sizeof(elementIndices), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		myMesh.Draw();
 
-		// ---------- rendering END!
+		// ---------- rendering END
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
+	myMesh.CleanUp();
 	glDeleteProgram(shaderProgram);
 	glfwTerminate();
 
