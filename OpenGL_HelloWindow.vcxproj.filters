@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{aaefe5e4-dc6e-4c54-a334-0251eac3184a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Documents\ProgrammingProjects\LearnOpenGL\OpenGL\glad.c">
@@ -26,16 +29,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="simple_vert_shader.vert">
-      <Filter>Source Files</Filter>
+    <None Include="shaders\simple_fragment_shader.frag">
+      <Filter>Shader Files</Filter>
     </None>
-    <None Include="simple_fragment_shader.frag">
-      <Filter>Source Files</Filter>
+    <None Include="shaders\simple_vert_shader.vert">
+      <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="io.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
