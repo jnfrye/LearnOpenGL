@@ -133,15 +133,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Documents\ProgrammingProjects\LearnOpenGL\OpenGL\glad.c" />
-    <ClCompile Include="source\io.cpp" />
-    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="io.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\simple_fragment_shader.frag" />
-    <None Include="shaders\simple_vert_shader.vert" />
+    <None Include="simple_fragment_shader.frag" />
+    <None Include="simple_vert_shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\io.h" />
+    <ClInclude Include="io.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
