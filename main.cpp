@@ -22,7 +22,7 @@ int main()
 		return -1;
 
 	unsigned int shaderProgram;
-	if (!TryCompileAndLinkShaders(shaderProgram))
+	if (!TryCompileAndLinkShaders("simple_vert_shader.vert", "simple_fragment_shader.frag", shaderProgram))
 		return -1;
 
 	GLfloat parallelogramVerts[] =

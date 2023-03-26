@@ -1,12 +1,25 @@
 #include "shader.h"
+#include "io.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <string>
 #include <iostream>
 
-bool TryCompileShader(GLenum shaderType, unsigned int& outShader, const char* shaderSource)
+bool TryCompileShader(const std::string& shaderFileName, GLenum shaderType, unsigned int& outShader)
 {
+	std::string shaderSource;
+	if (!TryReadFile("shaders\\" + shaderFileName, shaderSource))
+	{
+		return false;
+	}
+
+	// There MUST be a better way than this...
+	const char* sourceText = shaderSource.c_str();
+	const char* const* sourceTextArray = &(sourceText);
+	const int sourceTextArraySizes[] = { strlen(sourceText) };
+
 	outShader = glCreateShader(shaderType); // Create the shader, get the ID
-	glShaderSource(outShader, 1, &shaderSource, NULL); // Attach the shader source
+	glShaderSource(outShader, 1, sourceTextArray, sourceTextArraySizes); // Attach the shader source
 	glCompileShader(outShader); // Compile!
 
 	int success;
@@ -45,10 +58,10 @@ bool TryLinkShaders(unsigned int vertexShader, unsigned int fragmentShader, unsi
 	return true;
 }
 
-bool TryCompileAndLinkShaders(unsigned int& shaderProgram)
+bool TryCompileAndLinkShaders(const std::string& vertShaderFileName, const std::string& fragShaderFileName, unsigned int& shaderProgram)
 {
 	unsigned int vertexShader;
-	if (!TryCompileShader(GL_VERTEX_SHADER, vertexShader, "#version 330 core\nlayout (location = 0) in vec3 aPos; void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); }"))
+	if (!TryCompileShader(vertShaderFileName, GL_VERTEX_SHADER, vertexShader))
 	{
 		return false;
 	}
@@ -56,7 +69,7 @@ bool TryCompileAndLinkShaders(unsigned int& shaderProgram)
 	std::cout << "VERT SHADER ID: " << vertexShader << std::endl;
 
 	unsigned int fragmentShader;
-	if (!TryCompileShader(GL_FRAGMENT_SHADER, fragmentShader, "#version 330 core\nout vec4 FragColor;\nvoid main() { FragColor = vec4(1.0f, 0.f, 0.f, 1.0f); }"))
+	if (!TryCompileShader(fragShaderFileName, GL_FRAGMENT_SHADER, fragmentShader))
 	{
 		return false;
 	}

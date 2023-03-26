@@ -1,24 +1,20 @@
 #include "io.h"
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <iostream>
 
-const char* ReadFile(const char* fileName)
+bool TryReadFile(const std::string& fileName, std::string& outText)
 {
-	std::string text{};
-	std::fstream newfile;
-	newfile.open(fileName, std::ios::in);
-	if (newfile.is_open())
-	{
-		std::string tp;
-		while (std::getline(newfile, tp))
-		{
-			text += tp + "\n";
-		}
+	std::ifstream file;
+	file.open(fileName, std::ios::in);
+	if (!file.is_open())
+		return false;
 
-		newfile.close();
-	}
+	std::stringstream textStream;
+	textStream << file.rdbuf();
+	file.close();
 
-	std::cout << text.c_str();
-	return text.c_str();
+	outText = textStream.str();
+	return true;
 }
