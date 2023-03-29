@@ -140,8 +140,10 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\simple.frag" />
-    <None Include="shaders\simple.vert" />
+    <None Include="shaders\simple1.frag" />
+    <None Include="shaders\simple1.vert" />
+    <None Include="shaders\simple2.frag" />
+    <None Include="shaders\simple2.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="io.h" />

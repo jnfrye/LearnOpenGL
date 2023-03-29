@@ -21,8 +21,12 @@ int main()
 	if (!window)
 		return -1;
 
-	unsigned int shaderProgram;
-	if (!TryCompileAndLinkShaders("simple.vert", "simple.frag", shaderProgram))
+	unsigned int shaderProgram1;
+	if (!TryCompileAndLinkShaders("simple1.vert", "simple1.frag", shaderProgram1))
+		return -1;
+
+	unsigned int shaderProgram2;
+	if (!TryCompileAndLinkShaders("simple2.vert", "simple2.frag", shaderProgram2))
 		return -1;
 
 	GLfloat parallelogramVerts[] =
@@ -63,11 +67,13 @@ int main()
 
 		// ---------- rendering START
 
-		glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+		glClearColor(0.1f, .5f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shaderProgram);
+		glUseProgram(shaderProgram1);
 		parallelogramMesh.Draw();
+
+		glUseProgram(shaderProgram2);
 		triangleMesh.Draw();
 
 		// ---------- rendering END
@@ -78,7 +84,8 @@ int main()
 
 	parallelogramMesh.CleanUp();
 	triangleMesh.CleanUp();
-	glDeleteProgram(shaderProgram);
+	glDeleteProgram(shaderProgram1);
+	glDeleteProgram(shaderProgram2);
 	glfwTerminate();
 
 	return 0;
