@@ -70,7 +70,11 @@ int main()
 		glClearColor(0.1f, .5f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		float runTime = glfwGetTime();
+		float oscillation = sin(runTime) / 2.0f + 0.5f;
+		int myColorLocation = glGetUniformLocation(shaderProgram1, "MyColor");
 		glUseProgram(shaderProgram1);
+		glUniform4f(myColorLocation, 1.0f - oscillation, oscillation, 0.0f, 1.0f);
 		parallelogramMesh.Draw();
 
 		glUseProgram(shaderProgram2);
