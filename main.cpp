@@ -30,11 +30,11 @@ int main()
 		return -1;
 
 	GLfloat parallelogramVerts[] =
-	{
-		-0.5f, -0.5f, 0.0f,
-		 0.0f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
+	{	// X   // Y   // Z 	// R  // G  // B
+		-0.5f, -0.5f, 0.0f,	1.0f, 1.0f, 1.0f,
+		 0.0f, -0.5f, 0.0f,	1.0f, 0.0f, 0.0f,
+		 0.0f,  0.5f, 0.0f,	0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f,	0.0f, 0.0f, 1.0f,
 	};
 
 	unsigned int parallelogramElems[] =
@@ -43,14 +43,26 @@ int main()
 		0, 2, 1
 	};
 
-	Mesh parallelogramMesh{ sizeof(parallelogramVerts), parallelogramVerts, sizeof(parallelogramElems), parallelogramElems };
+	VertAttribute parallelogramAttrs[] =
+	{
+		VertAttribute{3},
+		VertAttribute{3},
+	};
+
+	Mesh parallelogramMesh
+	{
+		std::size(parallelogramVerts), parallelogramVerts,
+		std::size(parallelogramElems), parallelogramElems,
+		std::size(parallelogramAttrs), parallelogramAttrs,
+	};
+
 	parallelogramMesh.Initialize();
 
 	GLfloat triangleVerts[] =
-	{
-		-1.0f,  1.0f, 0.0f,
-		-0.8f,  0.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f,
+	{	// X   // Y   // Z  
+		-1.0f,  1.0f,  0.0f,
+		-0.8f,  0.0f,  0.0f,
+		-1.0f, -1.0f,  0.0f,
 	};
 
 	unsigned int triangleElems[] =
@@ -58,7 +70,18 @@ int main()
 		0, 1, 2
 	};
 
-	Mesh triangleMesh{ sizeof(triangleVerts), triangleVerts, sizeof(triangleElems), triangleElems };
+	VertAttribute triangleAttrs[] =
+	{
+		VertAttribute{3},
+	};
+
+	Mesh triangleMesh
+	{
+		std::size(triangleVerts), triangleVerts,
+		std::size(triangleElems), triangleElems,
+		std::size(triangleAttrs), triangleAttrs,
+	};
+
 	triangleMesh.Initialize();
 
 	while (window && !glfwWindowShouldClose(window))
@@ -67,7 +90,7 @@ int main()
 
 		// ---------- rendering START
 
-		glClearColor(0.1f, .5f, 0.25f, 1.0f);
+		glClearColor(0.2f, 0.175f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		float runTime = glfwGetTime();
@@ -87,9 +110,11 @@ int main()
 	}
 
 	parallelogramMesh.CleanUp();
-	triangleMesh.CleanUp();
 	glDeleteProgram(shaderProgram1);
+
+	triangleMesh.CleanUp();
 	glDeleteProgram(shaderProgram2);
+
 	glfwTerminate();
 
 	return 0;

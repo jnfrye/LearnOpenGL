@@ -2,9 +2,15 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-Mesh::Mesh(unsigned int verticesSize, GLfloat vertices[], unsigned int elementsSize, unsigned int elements[])
-	: VerticesSize{ verticesSize }, Vertices { vertices }, ElementsSize{ elementsSize }, Elements{ elements },
-	VertexArrayObj{ }, VertexBufferObj{ }, ElementBufferObj{ }
+Mesh::Mesh(
+	unsigned int vertsCount, GLfloat* verts,
+	unsigned int elemsCount, unsigned int* elems,
+	unsigned int attrsCount, VertAttribute* attrs
+)
+	: VerticesCount{ vertsCount }, Vertices{ verts },
+	  ElementsCount{ elemsCount }, Elements{ elems },
+	  VertAttributesCount{ attrsCount }, VertAttributes{ attrs },
+	  VertexArrayObj{ }, VertexBufferObj{ }, ElementBufferObj{ }
 { }
 
 void Mesh::Initialize()
@@ -17,22 +23,30 @@ void Mesh::Initialize()
 	// Set up the vertex buffer
 	glGenBuffers(1, &VertexBufferObj);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObj); // Bind the buffer as the VBO buffer
-	glBufferData(GL_ARRAY_BUFFER, VerticesSize, Vertices, GL_STATIC_DRAW); // Stuff the vertex data into the buffer
+	glBufferData(GL_ARRAY_BUFFER, VerticesCount * sizeof(VerticesCount), Vertices, GL_STATIC_DRAW);
 
 	// Set up the element buffer
 	glGenBuffers(1, &ElementBufferObj);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferObj);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ElementsSize, Elements, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ElementsCount * sizeof(ElementsCount), Elements, GL_STATIC_DRAW);
+
+	// Configure the vertex attribute pointers
+	auto stride{ 0u };
+	auto attrSize = sizeof(float);
+	for (auto loc{ 0u }; loc < VertAttributesCount; loc++)
+	{
+		stride += VertAttributes[loc].Count * attrSize;
+	}
 
 	// Tell OpenGL how our attribute is laid out in the array
-	unsigned int location = 0;
-	unsigned int coordsPerVertex = 3;
-	unsigned int stride = coordsPerVertex * sizeof(float);
-	unsigned int offset = 0;
-	glVertexAttribPointer(location, coordsPerVertex, GL_FLOAT, GL_FALSE, stride, (void*)offset);
-
-	// Must also enable it!
-	glEnableVertexAttribArray(location);
+	auto offset{ 0u };
+	for (auto loc{ 0u }; loc < VertAttributesCount; loc++)
+	{
+		auto attr = VertAttributes[loc];
+		glVertexAttribPointer(loc, attr.Count, GL_FLOAT, GL_FALSE, stride, (void*)offset);
+		glEnableVertexAttribArray(loc); // Must also enable it!
+		offset += attr.Count * attrSize;
+	}
 }
 
 void Mesh::CleanUp()
@@ -45,6 +59,6 @@ void Mesh::CleanUp()
 void Mesh::Draw()
 {
 	glBindVertexArray(VertexArrayObj);
-	glDrawElements(GL_TRIANGLES, ElementsSize, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, ElementsCount, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }

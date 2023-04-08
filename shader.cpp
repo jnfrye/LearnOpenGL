@@ -13,13 +13,10 @@ bool TryCompileShader(const std::string& shaderFileName, GLenum shaderType, unsi
 		return false;
 	}
 
-	// There MUST be a better way than this...
 	const char* sourceText = shaderSource.c_str();
-	const char* const* sourceTextArray = &(sourceText);
-	const int sourceTextArraySizes[] = { strlen(sourceText) };
 
 	outShader = glCreateShader(shaderType); // Create the shader, get the ID
-	glShaderSource(outShader, 1, sourceTextArray, sourceTextArraySizes); // Attach the shader source
+	glShaderSource(outShader, 1, &sourceText, NULL); // Attach the shader source
 	glCompileShader(outShader); // Compile!
 
 	int success;
