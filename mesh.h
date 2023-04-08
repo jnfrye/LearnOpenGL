@@ -3,31 +3,31 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-struct VertAttribute
+struct VertAttr
 {
 	unsigned int Count;
 };
 
 class Mesh
 {
-	unsigned int ElementsCount;
-	unsigned int* Elements;
+	unsigned int ElemsCount;
+	unsigned int* Elems;
 
-	unsigned int VerticesCount;
-	GLfloat* Vertices;
+	unsigned int VertsCount;
+	GLfloat* Verts;
 
-	unsigned int VertAttributesCount;
-	VertAttribute* VertAttributes;
+	unsigned int AttrsCount;
+	VertAttr* Attrs;
 
-	unsigned int VertexArrayObj;
-	unsigned int VertexBufferObj;
-	unsigned int ElementBufferObj;
+	unsigned int VertArrayObj;
+	unsigned int VertBufferObj;
+	unsigned int ElemBufferObj;
 
 public:
 	Mesh(
 		unsigned int vertsCount, GLfloat* verts,
 		unsigned int elemsCount, unsigned int* elems,
-		unsigned int attrsCount, VertAttribute* attrs
+		unsigned int attrsCount, VertAttr* attrs
 	);
 	void Initialize();
 	void CleanUp();

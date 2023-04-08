@@ -21,15 +21,15 @@ int main()
 	if (!window)
 		return -1;
 
-	unsigned int shaderProgram1;
-	if (!TryCompileAndLinkShaders("simple1.vert", "simple1.frag", shaderProgram1))
+	unsigned int mesh1shader;
+	if (!TryCompileAndLinkShaders("simple1.vert", "simple1.frag", mesh1shader))
 		return -1;
 
-	unsigned int shaderProgram2;
-	if (!TryCompileAndLinkShaders("simple2.vert", "simple2.frag", shaderProgram2))
+	unsigned int mesh2shader;
+	if (!TryCompileAndLinkShaders("simple2.vert", "simple2.frag", mesh2shader))
 		return -1;
 
-	GLfloat parallelogramVerts[] =
+	GLfloat mesh1Verts[] =
 	{	// X   // Y   // Z 	// R  // G  // B
 		-0.5f, -0.5f, 0.0f,	1.0f, 1.0f, 1.0f,
 		 0.0f, -0.5f, 0.0f,	1.0f, 0.0f, 0.0f,
@@ -37,52 +37,52 @@ int main()
 		 0.5f,  0.5f, 0.0f,	0.0f, 0.0f, 1.0f,
 	};
 
-	unsigned int parallelogramElems[] =
+	unsigned int mesh1Elems[] =
 	{
 		1, 2, 3,
 		0, 2, 1
 	};
 
-	VertAttribute parallelogramAttrs[] =
+	VertAttr mesh1Attrs[] =
 	{
-		VertAttribute{3},
-		VertAttribute{3},
+		VertAttr{3},
+		VertAttr{3},
 	};
 
-	Mesh parallelogramMesh
+	Mesh mesh1
 	{
-		std::size(parallelogramVerts), parallelogramVerts,
-		std::size(parallelogramElems), parallelogramElems,
-		std::size(parallelogramAttrs), parallelogramAttrs,
+		std::size(mesh1Verts), mesh1Verts,
+		std::size(mesh1Elems), mesh1Elems,
+		std::size(mesh1Attrs), mesh1Attrs,
 	};
 
-	parallelogramMesh.Initialize();
+	mesh1.Initialize();
 
-	GLfloat triangleVerts[] =
+	GLfloat mesh2Verts[] =
 	{	// X   // Y   // Z  
 		-1.0f,  1.0f,  0.0f,
 		-0.8f,  0.0f,  0.0f,
 		-1.0f, -1.0f,  0.0f,
 	};
 
-	unsigned int triangleElems[] =
+	unsigned int mesh2Elems[] =
 	{
 		0, 1, 2
 	};
 
-	VertAttribute triangleAttrs[] =
+	VertAttr mesh2Attrs[] =
 	{
-		VertAttribute{3},
+		VertAttr{3},
 	};
 
-	Mesh triangleMesh
+	Mesh mesh2
 	{
-		std::size(triangleVerts), triangleVerts,
-		std::size(triangleElems), triangleElems,
-		std::size(triangleAttrs), triangleAttrs,
+		std::size(mesh2Verts), mesh2Verts,
+		std::size(mesh2Elems), mesh2Elems,
+		std::size(mesh2Attrs), mesh2Attrs,
 	};
 
-	triangleMesh.Initialize();
+	mesh2.Initialize();
 
 	while (window && !glfwWindowShouldClose(window))
 	{
@@ -95,13 +95,13 @@ int main()
 
 		float runTime = glfwGetTime();
 		float oscillation = sin(runTime) / 2.0f + 0.5f;
-		int myColorLocation = glGetUniformLocation(shaderProgram1, "MyColor");
-		glUseProgram(shaderProgram1);
+		int myColorLocation = glGetUniformLocation(mesh1shader, "MyColor");
+		glUseProgram(mesh1shader);
 		glUniform4f(myColorLocation, 1.0f - oscillation, oscillation, 0.0f, 1.0f);
-		parallelogramMesh.Draw();
+		mesh1.Draw();
 
-		glUseProgram(shaderProgram2);
-		triangleMesh.Draw();
+		glUseProgram(mesh2shader);
+		mesh2.Draw();
 
 		// ---------- rendering END
 
@@ -109,11 +109,11 @@ int main()
 		glfwPollEvents();
 	}
 
-	parallelogramMesh.CleanUp();
-	glDeleteProgram(shaderProgram1);
+	mesh1.CleanUp();
+	glDeleteProgram(mesh1shader);
 
-	triangleMesh.CleanUp();
-	glDeleteProgram(shaderProgram2);
+	mesh2.CleanUp();
+	glDeleteProgram(mesh2shader);
 
 	glfwTerminate();
 
