@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <vector>
 
 struct VertAttr
 {
@@ -10,24 +11,19 @@ struct VertAttr
 
 class Mesh
 {
-	unsigned int ElemsCount;
-	unsigned int* Elems;
+	std::vector<GLfloat>& Verts;
+	std::vector<unsigned int>& Elems;
+	std::vector<VertAttr>& Attrs;
 
-	unsigned int VertsCount;
-	GLfloat* Verts;
-
-	unsigned int AttrsCount;
-	VertAttr* Attrs;
-
-	unsigned int VertArrayObj;
 	unsigned int VertBufferObj;
 	unsigned int ElemBufferObj;
+	unsigned int VertArrayObj;
 
 public:
 	Mesh(
-		unsigned int vertsCount, GLfloat* verts,
-		unsigned int elemsCount, unsigned int* elems,
-		unsigned int attrsCount, VertAttr* attrs
+		std::vector<GLfloat>& verts,
+		std::vector<unsigned int>& elems,
+		std::vector<VertAttr>& attrs
 	);
 	void Initialize();
 	void CleanUp();
