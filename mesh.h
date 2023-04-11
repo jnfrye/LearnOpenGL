@@ -11,9 +11,9 @@ struct VertAttr
 
 class Mesh
 {
-	std::vector<GLfloat>& Verts;
-	std::vector<unsigned int>& Elems;
-	std::vector<VertAttr>& Attrs;
+	std::vector<GLfloat> Verts;
+	std::vector<unsigned int> Elems;
+	std::vector<VertAttr> Attrs;
 
 	unsigned int VertBufferObj;
 	unsigned int ElemBufferObj;
