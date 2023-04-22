@@ -4,10 +4,10 @@
 Mesh MeshFactory::CreateTriangle()
 {
 	std::vector<GLfloat> verts
-	{	// X   // Y   // Z  
-		-1.0f,  1.0f,  0.0f,
-		-0.8f,  0.0f,  0.0f,
-		-1.0f, -1.0f,  0.0f,
+	{	// X   // Y   // Z  	 // phase
+		-1.0f,  0.0f,  0.0f,	 0.00000f,
+		 0.0f,  0.0f,  0.0f,	 0.33333f,
+		-0.5f,  1.0f,  0.0f,	 0.66667f,
 	};
 
 	std::vector<unsigned int> elems
@@ -18,6 +18,7 @@ Mesh MeshFactory::CreateTriangle()
 	std::vector<VertAttr> attrs
 	{
 		VertAttr{3},
+		VertAttr{1},
 	};
 
 	return { verts, elems, attrs };
@@ -26,11 +27,11 @@ Mesh MeshFactory::CreateTriangle()
 Mesh MeshFactory::CreateParallelogram()
 {
 	std::vector<GLfloat> verts
-	{	// X   // Y   // Z 	// R  // G  // B
-		-0.5f, -0.5f, 0.0f,	1.0f, 1.0f, 1.0f,
-		 0.0f, -0.5f, 0.0f,	1.0f, 0.0f, 0.0f,
-		 0.0f,  0.5f, 0.0f,	0.0f, 1.0f, 0.0f,
-		 0.5f,  0.5f, 0.0f,	0.0f, 0.0f, 1.0f,
+	{	// X    // Y   // Z 	// R  // G  // B
+		-0.50f, -1.0f, 0.0f,	1.0f, 1.0f, 1.0f,
+		 0.50f, -1.0f, 0.0f,	1.0f, 0.0f, 0.0f,
+		 0.00f,  0.0f, 0.0f,	0.0f, 1.0f, 0.0f,
+		 1.00f,  0.0f, 0.0f,	0.0f, 0.0f, 1.0f,
 	};
 
 	std::vector<unsigned int> elems

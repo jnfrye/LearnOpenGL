@@ -47,15 +47,24 @@ int main()
 		glClearColor(0.2f, 0.175f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		float runTime = glfwGetTime();
-		float oscillation = sin(runTime) / 2.0f + 0.5f;
-		int myColorLocation = glGetUniformLocation(mesh1shader, "MyColor");
-		glUseProgram(mesh1shader);
-		glUniform4f(myColorLocation, 1.0f - oscillation, oscillation, 0.0f, 1.0f);
-		parallelogram.Draw();
+		{
+			glUseProgram(mesh1shader);
+			float runTime = glfwGetTime();
+			float oscillation = sin(runTime) / 2.0f + 0.5f;
+			int myColorLocation = glGetUniformLocation(mesh1shader, "MyColor");
+			glUniform4f(myColorLocation, 1.0f - oscillation, oscillation, 0.0f, 1.0f);
+			parallelogram.Draw();
+		}
 
-		glUseProgram(mesh2shader);
-		triangle.Draw();
+		{
+			glUseProgram(mesh2shader);
+			constexpr float period = 2.0f;
+			float runTime = glfwGetTime();
+			float phase = (runTime - period * floor(runTime / period)) / period; // normalized
+			int phaseLocation = glGetUniformLocation(mesh2shader, "Phase");
+			glUniform1f(phaseLocation, phase);
+			triangle.Draw();
+		}
 
 		// ---------- rendering END
 
