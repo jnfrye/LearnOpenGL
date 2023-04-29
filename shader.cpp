@@ -1,88 +1,64 @@
 #include "shader.h"
 #include "io.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stdexcept>
 #include <string>
 #include <iostream>
 
-bool TryCompileShader(const std::string& shaderFileName, GLenum shaderType, unsigned int& outShader)
+
+static std::string GetExtension(Shader::EType type)
+{
+	switch (type)
+	{
+	case Shader::EType::Vert: return "vert";
+	case Shader::EType::Frag: return "frag";
+	default: throw std::invalid_argument("Invalid shader type: " + std::to_string(static_cast<int>(type)));
+	}
+}
+
+static GLenum GetGLType(Shader::EType type)
+{
+	switch (type)
+	{
+	case Shader::EType::Vert: return GL_VERTEX_SHADER;
+	case Shader::EType::Frag: return GL_FRAGMENT_SHADER;
+	default: throw std::invalid_argument("Invalid shader type: " + std::to_string(static_cast<int>(type)));
+	}
+}
+
+Shader::Shader(EType type)
+	: Type{ type }, ObjectID{ }
+{ }
+
+void Shader::CleanUp()
+{
+	glDeleteShader(ObjectID);
+}
+
+bool Shader::TryCompile(const std::string& assetName)
 {
 	std::string shaderSource;
-	if (!TryReadFile("shaders\\" + shaderFileName, shaderSource))
-	{
+	if (!TryReadFile("shaders\\" + assetName + "." +  GetExtension(Type), shaderSource))
 		return false;
-	}
 
 	const char* sourceText = shaderSource.c_str();
 
-	outShader = glCreateShader(shaderType); // Create the shader, get the ID
-	glShaderSource(outShader, 1, &sourceText, NULL); // Attach the shader source
-	glCompileShader(outShader); // Compile!
+	ObjectID = glCreateShader(GetGLType(Type)); // Create the shader, get the ID
+	glShaderSource(ObjectID, 1, &sourceText, NULL); // Attach the shader source
+	glCompileShader(ObjectID); // Compile!
 
 	int success;
-	glGetShaderiv(outShader, GL_COMPILE_STATUS, &success); // Check if it compiled...
+	glGetShaderiv(ObjectID, GL_COMPILE_STATUS, &success); // Check if it compiled...
 
 	if (!success)
 	{
 		char infoLog[512];
-		glGetShaderInfoLog(outShader, sizeof(infoLog), NULL, infoLog);
-		std::cout << "ERROR COMPILING VERTEX SHADER:\n" << infoLog << std::endl;
+		glGetShaderInfoLog(ObjectID, sizeof(infoLog), NULL, infoLog);
+		std::cout << "ERROR COMPILING SHADER:\n" << infoLog << std::endl;
 		return false;
 	}
-
-	return true;
-}
-
-bool TryLinkShaders(unsigned int vertexShader, unsigned int fragmentShader, unsigned int& shaderProgram)
-{
-	shaderProgram = glCreateProgram();
-	std::cout << "PROGRAM ID 1: " << shaderProgram << std::endl;
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	int success;
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success); // Check if it linked...
-
-	if (!success)
-	{
-		char infoLog[512];
-		glGetProgramInfoLog(shaderProgram, sizeof(infoLog), NULL, infoLog);
-		std::cout << "ERROR LINKING SHADERS:\n" << infoLog << std::endl;
-		return false;
-	}
-
-	return true;
-}
-
-bool TryCompileAndLinkShaders(const std::string& vertShaderFileName, const std::string& fragShaderFileName, unsigned int& shaderProgram)
-{
-	unsigned int vertexShader;
-	if (!TryCompileShader(vertShaderFileName, GL_VERTEX_SHADER, vertexShader))
-	{
-		return false;
-	}
-
-	std::cout << "VERT SHADER ID: " << vertexShader << std::endl;
-
-	unsigned int fragmentShader;
-	if (!TryCompileShader(fragShaderFileName, GL_FRAGMENT_SHADER, fragmentShader))
-	{
-		return false;
-	}
-
-	std::cout << "FRAG SHADER ID: " << fragmentShader << std::endl;
-
-	if (!TryLinkShaders(vertexShader, fragmentShader, shaderProgram))
-	{
-		return false;
-	}
-
-	std::cout << "PROGRAM ID 2: " << shaderProgram << std::endl;
-
-	// The shader objects are no longer needed after linking
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
 
 	return true;
 }

@@ -1,8 +1,27 @@
 #pragma once
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
 
-bool TryCompileShader(const std::string& shaderFileName, GLenum shaderType, unsigned int& outShader);
-bool TryLinkShaders(unsigned int vertexShader, unsigned int fragmentShader, unsigned int& shaderProgram);
-bool TryCompileAndLinkShaders(const std::string& vertShaderFileName, const std::string& fragShaderFileName, unsigned int& shaderProgram);
+
+class Shader
+{
+public:
+	enum class EType
+	{
+		Invalid = 0,
+		Vert,
+		Frag
+	};
+
+	unsigned int ObjectID;
+
+private:
+	const EType Type;
+
+public:
+	Shader(EType type);
+	void CleanUp();
+	bool TryCompile(const std::string& assetName);
+};

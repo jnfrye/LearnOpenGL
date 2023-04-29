@@ -1,5 +1,5 @@
 #include "window.h"
-#include "shader.h"
+#include "shader_program.h"
 #include "mesh.h"
 #include "mesh_factory.h"
 
@@ -24,13 +24,13 @@ int main()
 	if (!window)
 		return -1;
 
-	unsigned int mesh1shader;
-	if (!TryCompileAndLinkShaders("simple1.vert", "simple1.frag", mesh1shader))
-		return -1;
+	ShaderProgram mesh1shader("simple1");
+	if (!mesh1shader.TryCompileAndLinkShaders())
+		return -2;
 
-	unsigned int mesh2shader;
-	if (!TryCompileAndLinkShaders("simple2.vert", "simple2.frag", mesh2shader))
-		return -1;
+	ShaderProgram mesh2shader("simple2");
+	if (!mesh2shader.TryCompileAndLinkShaders())
+		return -3;
 
 	Mesh parallelogram = MeshFactory::CreateParallelogram();
 	parallelogram.Initialize();
@@ -48,20 +48,20 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		{
-			glUseProgram(mesh1shader);
+			glUseProgram(mesh1shader.Program);
 			float runTime = glfwGetTime();
 			float oscillation = sin(runTime) / 2.0f + 0.5f;
-			int myColorLocation = glGetUniformLocation(mesh1shader, "MyColor");
+			int myColorLocation = glGetUniformLocation(mesh1shader.Program, "MyColor");
 			glUniform4f(myColorLocation, 1.0f - oscillation, oscillation, 0.0f, 1.0f);
 			parallelogram.Draw();
 		}
 
 		{
-			glUseProgram(mesh2shader);
+			glUseProgram(mesh2shader.Program);
 			constexpr float period = 2.0f;
 			float runTime = glfwGetTime();
 			float phase = (runTime - period * floor(runTime / period)) / period; // normalized
-			int phaseLocation = glGetUniformLocation(mesh2shader, "Phase");
+			int phaseLocation = glGetUniformLocation(mesh2shader.Program, "Phase");
 			glUniform1f(phaseLocation, phase);
 			triangle.Draw();
 		}
@@ -73,10 +73,10 @@ int main()
 	}
 
 	parallelogram.CleanUp();
-	glDeleteProgram(mesh1shader);
+	mesh1shader.CleanUp();
 
 	triangle.CleanUp();
-	glDeleteProgram(mesh2shader);
+	mesh2shader.CleanUp();
 
 	glfwTerminate();
 
