@@ -2,6 +2,7 @@
 #include "shader_program.h"
 #include "mesh.h"
 #include "mesh_factory.h"
+#include "vector.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -48,21 +49,23 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		{
-			glUseProgram(mesh1shader.Program);
+			mesh1shader.Use();
+
 			float runTime = glfwGetTime();
 			float oscillation = sin(runTime) / 2.0f + 0.5f;
-			int myColorLocation = glGetUniformLocation(mesh1shader.Program, "MyColor");
-			glUniform4f(myColorLocation, 1.0f - oscillation, oscillation, 0.0f, 1.0f);
+
+			mesh1shader.SetUniform("MyColor", Vec4<float>{ 1.0f - oscillation, oscillation, 0.0f, 1.0f });
 			parallelogram.Draw();
 		}
 
 		{
-			glUseProgram(mesh2shader.Program);
+			mesh2shader.Use();
+
 			constexpr float period = 2.0f;
 			float runTime = glfwGetTime();
 			float phase = (runTime - period * floor(runTime / period)) / period; // normalized
-			int phaseLocation = glGetUniformLocation(mesh2shader.Program, "Phase");
-			glUniform1f(phaseLocation, phase);
+			
+			mesh2shader.SetUniform("Phase", phase);
 			triangle.Draw();
 		}
 

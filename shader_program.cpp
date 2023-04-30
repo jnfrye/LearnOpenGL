@@ -56,3 +56,20 @@ bool ShaderProgram::TryLinkShaders(unsigned int vertShader, unsigned int fragSha
 
 	return true;
 }
+
+void ShaderProgram::Use()
+{
+	glUseProgram(Program);
+}
+
+void ShaderProgram::SetUniform(const char* name, Vec4<float> value)
+{
+	int location = glGetUniformLocation(Program, name);
+	glUniform4f(location, value.x, value.y, value.z, value.w);
+}
+
+void ShaderProgram::SetUniform(const char* name, float value)
+{
+	int location = glGetUniformLocation(Program, name);
+	glUniform1f(location, value);
+}

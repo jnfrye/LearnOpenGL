@@ -141,6 +141,7 @@
     <ClCompile Include="mesh_factory.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shader_program.cpp" />
+    <ClCompile Include="vector.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="mesh_factory.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shader_program.h" />
+    <ClInclude Include="vector.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
