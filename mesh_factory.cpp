@@ -48,3 +48,28 @@ Mesh MeshFactory::CreateParallelogram()
 
 	return { verts, elems, attrs };
 }
+
+Mesh MeshFactory::CreateSquare()
+{
+	std::vector<GLfloat> verts
+	{	  // X   // Y   // Z 	// S  // T
+		  0.1f,  0.1f,  0.0f,	0.0f, 0.0f,
+		  0.9f,  0.1f,  0.0f,	1.0f, 0.0f,
+		  0.9f,  0.9f,  0.0f,	1.0f, 1.0f,
+		  0.1f,  0.9f,  0.0f,	0.0f, 1.0f,
+	};
+
+	std::vector<unsigned int> elems
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	std::vector<VertAttr> attrs
+	{
+		VertAttr{3},
+		VertAttr{2},
+	};
+
+	return { verts, elems, attrs };
+}

@@ -150,6 +150,8 @@
     <None Include="shaders\simple1.vert" />
     <None Include="shaders\simple2.frag" />
     <None Include="shaders\simple2.vert" />
+    <None Include="shaders\texture1.frag" />
+    <None Include="shaders\texture1.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="io.h" />
@@ -160,6 +162,9 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\heron.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

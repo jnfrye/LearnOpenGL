@@ -58,6 +58,8 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="shaders\simple2.vert" />
+    <None Include="shaders\texture1.frag" />
+    <None Include="shaders\texture1.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="io.h">
@@ -84,5 +86,10 @@
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\heron.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
