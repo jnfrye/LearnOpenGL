@@ -25,6 +25,7 @@ public:
 	void Use();
 	void SetUniform(const char* name, Vec4<float> value);
 	void SetUniform(const char* name, float value);
+	void SetUniform(const char* name, int value);
 
 private:
 	bool TryLinkShaders(unsigned int vertShader, unsigned int fragShader);

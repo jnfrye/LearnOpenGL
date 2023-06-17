@@ -38,9 +38,18 @@ int main()
 	if (!squareShader.TryCompileAndLinkShaders())
 		return -4;
 
-	Texture texture;
-	if (!texture.TryLoad("textures/container.jpg"))
+	// These only need to be set once
+	squareShader.Use();
+	squareShader.SetUniform("TexData0", 0);
+	squareShader.SetUniform("TexData1", 1);
+
+	Texture texture0;
+	if (!texture0.TryLoad("textures/awesomeface.png"))
 		return -5;
+
+	Texture texture1;
+	if (!texture1.TryLoad("textures/container.jpg"))
+		return -6;
 
 	Mesh parallelogram = MeshFactory::CreateParallelogram();
 	parallelogram.Initialize();
@@ -83,7 +92,12 @@ int main()
 
 		{
 			squareShader.Use();
-			glBindTexture(GL_TEXTURE_2D, texture.ObjectID);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture0.ObjectID);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, texture1.ObjectID);
+
 			square.Draw();
 		}
 
