@@ -142,6 +142,7 @@
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shader_program.cpp" />
     <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="texture.cpp" />
     <ClCompile Include="vector.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -160,11 +161,12 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="shader_program.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\heron.jpg" />
+    <Image Include="textures\container.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,10 +1,9 @@
 #include "window.h"
 #include "shader_program.h"
 #include "mesh.h"
+#include "texture.h"
 #include "mesh_factory.h"
 #include "vector.h"
-
-#include "stb_image.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -17,38 +16,6 @@ void ProcessInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-}
-
-bool TryLoadTexture(const char* path, GLuint& outTextureId)
-{
-	// Create and bind texture object
-	glGenTextures(1, &outTextureId);
-	glBindTexture(GL_TEXTURE_2D, outTextureId);
-
-	// Load texture data
-	int width;
-	int height;
-	int numChannels;
-	unsigned char* data = stbi_load(path, &width, &height, &numChannels, 0);
-
-	if (!data)
-	{
-		std::cout << "Failed to load texture '" << path << "'" << std::endl;
-		return false;
-	}
-
-	// Set wrapping and filtering options
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	// Generate the texture and the mipmap levels
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	stbi_image_free(data);
-	return true;
 }
 
 int main()
@@ -71,8 +38,8 @@ int main()
 	if (!squareShader.TryCompileAndLinkShaders())
 		return -4;
 
-	GLuint textureId;
-	if (!TryLoadTexture("textures/container.jpg", textureId))
+	Texture texture;
+	if (!texture.TryLoad("textures/container.jpg"))
 		return -5;
 
 	Mesh parallelogram = MeshFactory::CreateParallelogram();
@@ -96,7 +63,7 @@ int main()
 		{
 			mesh1shader.Use();
 
-			float runTime = glfwGetTime();
+			double runTime = glfwGetTime();
 			float oscillation = sin(runTime) / 2.0f + 0.5f;
 
 			mesh1shader.SetUniform("MyColor", Vec4<float>{ 1.0f - oscillation, oscillation, 0.0f, 1.0f });
@@ -107,7 +74,7 @@ int main()
 			mesh2shader.Use();
 
 			constexpr float period = 2.0f;
-			float runTime = glfwGetTime();
+			double runTime = glfwGetTime();
 			float phase = (runTime - period * floor(runTime / period)) / period; // normalized
 			
 			mesh2shader.SetUniform("Phase", phase);
@@ -116,7 +83,7 @@ int main()
 
 		{
 			squareShader.Use();
-			glBindTexture(GL_TEXTURE_2D, textureId);
+			glBindTexture(GL_TEXTURE_2D, texture.ObjectID);
 			square.Draw();
 		}
 
